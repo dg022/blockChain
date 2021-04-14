@@ -19,7 +19,15 @@ public class Transaction {
 		this.value = value;
 		this.inputs = inputs;
 	}
+	public void generateSignature(PrivateKey privateKey) {
+		String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(reciepient) + Float.toString(value)	;
+		signature = StringUtil.applyECDSASig(privateKey,data);		
+	}
 	
+	public boolean verifiySignature() {
+		String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(reciepient) + Float.toString(value)	;
+		return StringUtil.verifyECDSASig(sender, data, signature);
+	}
 	private String calulateHash() {
 		sequence++; //increase the sequence to avoid 2 identical transactions having the same hash
 		return StringUtil.applySha256(
